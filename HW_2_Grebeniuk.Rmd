@@ -1,0 +1,60 @@
+---
+title: "HW_2"
+author: "Grebeniuk_Alena"
+date: "11/10/2023"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#1 Calculate the square root of 36 using R.
+sqrt(36)
+
+#2 Create two vectors called
+# vec1 with the numbers 1, 7, 10, 14, 21.
+# vec2 with the numbers 14, 2, 9, 21, 26.
+
+vec1<-c(1,7,10,14,21)
+
+vec2<-c(14,2,9,21,26)
+
+#1. Concatenate using c() the two vectors to get a new vector vec.
+vecc<-c(vec1, vec2)
+#2. Use the function which to find the index or indices of the element(s) in the vector vec with the value 21.
+indeces<-which(vecc==21)
+which(vecc==21)
+
+#3. Use the function seq to obtain the first, third, fifth, seventh, and ninth elements of the vector vec.
+vecc<-seq(1,9,3)
+#4. Print out all the elements of vec except the third element.
+vecc[-c(3)]
+#5. Print out all the elements of vec that are less than 20.
+which(vecc<20)
+#6. Print out all the odd numbers in vec using the function mod.
+vecc<-vecc[vecc %% 2 !=0]
+??mod
+#7. Add the vectors vec1 and vec2.
+vec1+vec2
+#8. Multiply vec1 with vec2 (element-wise multiplication).
+vec1^vec2
+#9. Multiply the vector vec1 with 23.
+vec1^23
+#10. Divide vec1 by vec1 and show the result (element-wise division). Use the operator / to do the division.
+print(vec1/vec2)
+#3Create a sequence using seq that goes from 25 to 45 so that you obtain numbers in steps of 2: 25,27, 29, etc.
+seq(25,45,2)
+
+#4 Use the function rep to produce 20 instances of 10.
+
+rep(x=20, times=10)
+
+#5 Use the function rep to produce five instances each of the numbers 4,5,6.
+
+rep(c(4,5,6), times=5)
+
+
+```
+
