@@ -1,0 +1,137 @@
+---
+title: "HW_9_"
+author: "Grebeniuk_Alena"
+date: "1/13/2024"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+load("df_gg05e1.rda") 
+head(df_gg05e1)
+
+```
+```{r}
+getwd()
+```
+
+
+First, compute the absolute critical t-value for this null hypothesis test.
+```{r}
+n<-42
+abs_critical_t<-abs(qt(0.025,df=n-1))
+abs_critical_t
+
+```
+
+Then, compute the observed t-value.
+```{r}
+n<-42
+x_bar<-mean(df_gg05e1$rawRT)
+SE<-x_bar/sqrt(n)
+abs_observed_t<-abs((x_bar-0)/SE)
+abs_observed_t
+SE
+x_bar
+
+observed_t<-(x_bar-0)/SE
+observed_t
+```
+
+
+Then, compute the p-value.
+```{r}
+n<-42
+abs_observed_t<-6.480741
+p_value<-2*pt(abs_observed_t,df=n-1, lower.tail = FALSE)
+p_value
+
+
+```
+ 
+
+```{r}
+
+mean_subjgap<-mean(subset(df_gg05e1,condition=="subjgap")$rawRT)
+mean_subjgap
+
+mean_objgap<-mean(subset(df_gg05e1,condition=="objgap")$rawRT)
+mean_objgap
+
+mean_objgap-mean_subjgap
+
+
+```
+ 
+ 
+ 
+ “The mean difference between object and subject relatives was 102.2857
+ms, SE 64.840; t(42)=6.4807, p=8.962.”
+
+
+Now redo the above analysis using the t.test function as shown in class, and check whether you get
+exactly the same observed t-value and the p-value as the one you computed above “by hand”.
+
+
+```{r}
+diff_means<-with(df_gg05e1,tapply(df_gg05e1$rawRT,IND=list(condition=="objgap", condition=="subjgap"),mean))
+diff_means
+
+```
+
+
+
+```{r}
+t.test(diff_means,type="one.sample", alternative="two.sided")
+
+```
+
+Exercise 2
+Given the above information, and assuming a Type I error of 0.05, what would be your statistical power?
+
+```{r}
+D<-0.05
+n_subj<-70
+stddev<-150
+power.t.test(d=D,n=n_subj,sd=stddev, alternative="two.sided",type="one.sample",strict=TRUE)
+             
+```
+
+Given your power calculation, what is the Type II error here?
+
+```{r}
+
+power <- 0.05000087
+type_ii_error <- 1 - power
+type_ii_error
+
+```
+
+Some researchers recommend redefining Type I error to 0.005.
+
+Compute your power under the assumption that Type I error is 0.005. Hint: look at the help for the function power.t.test; you need to adjust the sig.level value, which has a default of 0.05. 
+
+How does the power change when Type I error is changed to 0.005 from 0.05, and more importantly, why?
+
+when the power change form 0.05 to 0.005 we get the decreased significance level to 0.005 as well. Also the power of the test is decreasing because it makes it more difficult to reject the null hypothesis. 
+
+```{r}
+D<-0.005
+n_subj<-70
+stddev<-150
+power.t.test(d=D,n=n_subj,sd=stddev, alternative="two.sided",type="one.sample",strict=TRUE, sig.level = 0.005)
+
+
+```
+
+
+
+What is the smallest value that power can have theoretically? Hint: the smallest value for power will correspond to an effect size approaching 0 ms.
+
+The smallest value that power can have theoretically is 0. It happens when the difference between the two groups or conditions is extremely small or negligible.
+
