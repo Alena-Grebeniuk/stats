@@ -1,0 +1,188 @@
+---
+title: "HW_10"
+author: "Grebeniuk_Alena"
+date: "1/22/2024"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+ df_chineseRCs<-read.table("chinese_meta_analysis.txt",header=TRUE)
+head(df_chineseRCs)
+```
+```{r}
+#install.packages("metafor")
+library(metafor)
+```
+
+```{r}
+## run the meta-analysis:
+m <- rma(yi=y,
+         vi=se^2,
+         method = "REML",
+         slab = paste(study.id, study, sep = "_"),
+         data = df_chineseRCs)
+summary(m)
+```
+
+```{r}
+forest(m,xlab="Subject - Object RC reading time (ms)")
+```
+
+```{r}
+SEs<-c(48, 54.8, 30, 42, 44.63,19.9, 25, 40.74,23, 65.14, 
+       35.5,36.25,41.2, 80, 50.9)
+n_subj<- c(37,40,48,32,40,24,35,48,40,49,39,49,61,48,60)
+chinese_SE_n<-data.frame(SEs,n_subj)
+chinese_SE_n
+```
+
+```{r}
+estimated_sd<-SEs*sqrt(n_subj) 
+summary(estimated_sd)
+```
+
+```{r}
+hist(estimated_sd,freq=FALSE)
+```
+
+
+# Exercise 1 
+
+Given that the effect size based on the published data is 17 ms, and assuming that the standard deviation can range from 100 to 560 ms, find out what the sample size (the number of subjects) you would need to have 80% statistical power.
+Show power calculations for a one-sample t-test assuming a range of standard deviations. For example, do a series of power analyses with sd=100,170, 180,. . . ,560:
+```{r}
+SDs<-seq(100,560,by=10)
+```
+
+
+```{r}
+# Load the pwr package
+#install.packages("pwr")
+library(pwr)
+
+# Set the effect size (Cohen's d)
+effect_size <- 17 / sd(c(100, 560))
+
+# Set the desired power
+desired_power <- 0.8
+
+# Perform the power analysis
+sample_size <- pwr.t.test(d = effect_size, sig.level = 0.05, power = desired_power, type = "two.sample")$n
+
+# Print the result
+cat("The required sample size is:", round(sample_size))
+```
+
+
+```{r}
+library(pwr)
+
+# Create a sequence of standard deviations
+SDs <- seq(100, 560, by = 10)
+
+# Calculate the number of standard deviations
+n_SD <- length(SDs)
+
+# Create an empty data frame to store the results
+results <- data.frame(SDs, n_subjects_needed = rep(NA, n_SD))
+
+# Perform power analysis for each standard deviation
+for (i in 1:n_SD) {
+  sd_value <- SDs[i]
+  effect_size <- 17 / sd_value
+  
+  # Perform the power analysis
+  power_result <- pwr.t.test(d = effect_size, sig.level = 0.05, power = 0.8, type = "one.sample")
+  
+  # Store the sample size needed for 80% power
+  results$n_subjects_needed[i] <- power_result$n
+}
+
+# Print the results
+print(results)
+```
+
+
+# Exercise 2 
+The meta-analysis estimate actually comes with some uncertainty about the effect size. The estimate is 17 ms with an estimated standard error of 24 ms (look at Model Results below):
+```{r}
+summary(m)
+```
+
+```{r}
+library(pwr)
+
+# Create a sequence of standard deviations
+SDs <- seq(100, 560, by = 10)
+
+# Calculate the number of standard deviations
+n_SD <- length(SDs)
+
+# Create an empty data frame to store the results
+results <- data.frame(SDs, n_subjects_needed = rep(NA, n_SD))
+
+# Perform power analysis for each standard deviation
+for (i in 1:n_SD) {
+  sd_value <- SDs[i]
+  effect_size <- 35 / sd_value
+  
+  # Perform the power analysis
+  power_result <- pwr.t.test(d = effect_size, sig.level = 0.05, power = 0.8, type = "one.sample")
+  
+  # Store the sample size needed for 80% power
+  results$n_subjects_needed[i] <- power_result$n
+}
+
+# Print the results
+print(results)
+```
+
+# Exercise 3
+A researcher carries out an experiment on Chinese relative clauses. Here are the data:
+
+```{r}
+df_gibsonwu2<-read.table("chineseRCstudy.txt",header=TRUE) 
+head(df_gibsonwu2)
+```
+
+
+```{r}
+means<-round(with(df_gibsonwu2, tapply(rt, IND=condition, mean)))
+bysubj<-aggregate(rt~subj+condition,mean,data=df_gibsonwu2)
+means
+bysubj
+```
+
+
+```{r}
+# one-sample t-test 
+result<- t.test(rt~condition,paired=TRUE,bysubj)$statistic
+print(result)
+```
+```{r}
+new_ttest<-t.test(rt~condition,bysubj,mu=17, paired=TRUE)
+new_ttest
+```
+```{r}
+df<-39
+abs_critical_t<-abs(qt(0.025,df))
+abs_critical_t
+
+SE<-90/sqrt(40)
+SE
+x_bar<-mean(df_gibsonwu2$rt)
+x_bar
+observed_t<-(x_bar-0)/SE
+observed_t
+```
+in this case i suppose that we can reject the null hypothesis.
+Regarding the plausibility of the effect estimate from this study compared to the meta-analysis estimate. Several reasons could contribute to this difference: Methodological differences, Sample characteristics, Contextual factors.
