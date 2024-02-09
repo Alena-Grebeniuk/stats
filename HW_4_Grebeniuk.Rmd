@@ -1,0 +1,110 @@
+---
+title: "HW_4_Grebeniuk"
+author: "Grebeniuk_Alena"
+date: "11/26/2023"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+#Read in the comma-separated file persianE1.csv and save it as the object dat.
+
+```{r}
+dat<-read.table("persianE1.csv", header = TRUE, sep = ",")
+```
+
+
+## Exercise 1
+
+#What are the types of each of the columns in the data frame (e.g., integer, character, factor)? 
+```{r}
+str(dat)
+
+```
+
+#What should the types be of the columns subj and item? 
+```{r}
+# they should be of the type factor.
+```
+
+
+#The columns distance and predability need to be of type factor; change the types of these two columns and of the subj and item columns to type factor, and then check that the columns have the correct types after you have made your changes.
+
+```{r}
+dat$distance<-as.factor(dat$distance)
+dat$predability<-as.factor(dat$predability)
+dat$subj<-as.factor(dat$subj)
+dat$item<-as.factor(dat$item)
+str(dat)
+```
+
+## Exercise 2
+
+#What is the mean reading time for each of the four levels of the 2 × 2 design? In other words, find the mean reading time for
+
+#1. distance==short and predability==predictable
+`
+```{r}
+mean_short_predictable<-mean(dat$rt[dat$distance=="short"& dat$predability=="predictable"])
+```
+
+#2. distance==short and predability==unpredictable
+```{r}
+mean_short_unpredictable<-mean(dat$rt[dat$distance=="short"&dat$predability=="unpredictable"])
+```
+
+#3. distance==long and predability==predictable
+```{r}
+mean_long_predictable<-mean(dat$rt[dat$distance=="long"&dat$predability=="predictable"])
+```
+
+#4. distance==long and predability==unpredictable
+```{r}
+mean_long_unpredictable<-mean(dat$rt[dat$distance=="long"&dat$predability=="unnpredictable"])
+```
+
+## Exercise 3 
+
+#How many subjects and items are there in the above data set?
+
+```{r}
+length(dat$subj)
+```
+
+```{r}
+length(dat$item)
+```
+
+## Exercise 4
+
+#Use the hist function to plot a histogram of the reading times in milliseconds. Notice the skew in the data. (Look up the help on hist to find out how to use this function.)
+```{r}
+??hist
+hist(dat$rt)
+```
+
+#Now transform the reading time (which is in milliseconds) to log milliseconds using the function log() (create a new column called logrt). Plot the logrt data using hist. Notice that the skew is much reduced.
+
+```{r}
+dat$logrt<-log(dat$rt)
+hist(dat$logrt)
+```
+
+## Exercise 5
+
+```{r}
+x<-c(42,54,12,18,76,23,87)
+x1<-rep(NA,length(x))
+
+for(i in 1:length(x)){
+  x1[i]<-x[i]+1
+} 
+x1
+
+```
+
+
