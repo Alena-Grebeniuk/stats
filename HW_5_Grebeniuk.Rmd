@@ -1,0 +1,539 @@
+---
+title: "HW_5_Grebeniuk"
+author: "Grebeniuk_Alena"
+date: "12/2/2023"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+# Exercise 1 . Pre-process the data so that you have the following four columns:
+## subj compatible correct rt
+```{r}
+
+getwd()
+setwd("/Users/alenagrebenuk/Desktop/stats1_hw")
+dat<-read.table("stroopdata.txt",header=FALSE)
+head(dat)
+dat<-dat[,c(3,4,7,8)]
+head(dat)
+colnames(dat)<-c("subj","compatible","correct","rt")
+head(dat)
+```
+
+## subj refers to subject id (factor) 
+```{r}
+dat$subj<-as.factor(dat$subj)
+```
+
+## compatible is coded as 1 (compatible) or 0 (incompatible), also a factor
+```{r}
+dat$compatible<-as.factor(dat$compatible)
+```
+
+## correct (whether the response is correct or incorrect), this is an integer (numeric)
+```{r}
+dat$correct<-as.integer(dat$correct)
+```
+
+## rt is the reaction time in milliseconds (also an integer, numeric)
+```{r}
+dat$rt<-as.integer(dat$rt)
+```
+
+# Ecercise 2 
+## Plot the distribution of reaction times for the compatible and incompatible conditions using histograms and boxplots. 
+
+```{r}
+compatible_rt<-subset(dat,compatible==1)$rt
+incompatible_rt<-subset(dat, compatible==0)$rt
+hist(compatible_rt)
+hist(incompatible_rt)
+```
+```{r}
+boxplot(compatible_rt)
+boxplot(incompatible_rt)
+
+```
+## the thick horizontal line in the box is MEDIAN - (the middle value of the dataset).
+## what are the ends of the whiskers? -THOSE ARE ENDS OF OBSERVED DATA POINTS - (Minimum and maximum values within a certain range).
+## and what do the top and bottom edges of the box represent? - the Bottom is the Rirst Quartile (Q1)(he median of the lower half of the data) 
+## the Top Edge is the Third Quartile (Q3)(the median of the upper half of the data.)
+
+
+# Exercise 3 
+## What is the mean difference between the incongruent and incongruent conditions (across all subjects)?
+```{r}
+mean(subset(dat,compatible==1)$rt)
+```
+
+
+```{r}
+
+mean(subset(dat,compatible==0)$rt)
+```
+
+# Exercise 4 
+## For each subject, what are the means differences between the incongruent and incongruent conditions?
+```{r}
+
+with(dat,tapply(rt, IND=list(subj,compatible),mean))
+
+getwd()
+```
+
+# Exercise 5 
+## What do you conclude from the differences in means? Can we conclude that incongruent conditions have longer reaction times than congruent conditions?
+
+## we can coclude that incongruent conditions have longer reaction times than congruent conditions. Since the difference in mean showed that 1108.1833 > 982.6296. 
+
+_heello - to make ithe text cursive 
+
+> Hvjbkjhbk - to make the "chunk" for the text
+
+```{r}
+
+
+l1 <- c(1, 2, 3, 6, 10)
+l2 <- c(6, 2, 4, 5, 55)
+
+print(l1+l2)
+```
+
+```{r}
+getwd()
+SE<-31.826/sqrt(42)
+print(SE)
+
+```
+```{r}
+# Given values
+sample_mean <- 12.779
+hypothesized_mean <- 0
+sample_sd <- 31.826
+sample_size <- 42
+
+# Calculate the t-value
+observed_t_value <- abs((sample_mean - hypothesized_mean) / (sample_sd / sqrt(sample_size)))
+
+print(observed_t_value)
+
+# Print the result
+```
+
+
+
+
+
+```{r}
+Sd<- (24.513-0)/4.668
+Sd
+SE<-5.251/sqrt(15)
+SE
+```
+
+
+
+
+
+```{r}
+t_value<-2.602
+df=41
+p_value<-2*pt(abs(t_value), df, lower.tail=FALSE)
+print(p_value)
+```
+
+
+
+
+```{r}
+# Given sample size
+n <- 42
+
+# Calculate degrees of freedom
+df <- n - 1
+
+# Print the result
+print(df)
+
+```
+```{r}
+# Given significance level (e.g., 0.05 for a 95% confidence level)
+alpha <- 0.05
+
+# Given degrees of freedom (df)
+df <- 41  # replace with your actual degrees of freedom
+
+# Calculate critical t-value
+critical_t <- qt(1 - alpha/2, df)
+
+# Take the absolute value
+absolute_critical_t <- abs(critical_t)
+
+# Print the result
+print(absolute_critical_t)
+
+```
+
+```{r}
+# Example code (replace df and crit_val with your values)
+df <- 30  # degrees of freedom
+crit_val <- 2.042  # critical t-value
+
+# Probability of observing a value as extreme as or more extreme than crit_val
+p_value <- pt(crit_val, df, lower.tail = FALSE)
+
+# Print the result
+print(p_value)
+
+```
+```{r}
+# Example code (replace obs_t, df with your values)
+obs_t <- 2.5  # observed t-value
+df <- 30  # degrees of freedom
+
+# Probability of observing a t-value as extreme as or more extreme than obs_t
+p_value_two_tailed <- 2 * (1 - pt(abs(obs_t), df))
+
+# Print the result
+print(p_value_two_tailed)
+
+```
+```{r}
+# Assuming df is the degrees of freedom
+df <- n-1  # Replace ... with the actual degrees of freedom
+
+# Calculate critical t-value
+critical_t_value <- qt(0.025, df, lower.tail = FALSE)
+print(critical_t_value )
+```
+
+```{r}
+# Given values
+sample_mean <- 24.513
+abs_observed_t_value <- 4.668
+sample_size <- 15
+mu<- 0
+
+# Degrees of freedom 0
+df <- sample_size - 1
+
+# Critical t-value for a two-sided test at a 0.05 significance level
+critical_t_value <- abs(qt(0.025, df))
+#absolute_critical_t <- abs(critical_t_value)
+critical_t_value
+# Print the result
+#print(absolute_critical_t)
+
+# Estimated standard error
+SE <- abs_observed_t_value / sample_mean
+SE
+# Estimated standard deviation
+SD <- SE * sqrt(sample_size)
+
+# P-value for a two-sided t-test
+p_value <- 2 * pt(-abs(observed_t_value), df)
+
+
+```
+
+```{r}
+# Given values
+alpha <- 0.05
+df <- 14
+absolute_observed_t_value <- 4.668
+
+# Calculate the critical t-value for a two-sided test
+absolute_critical_t_value <- qt(1 - alpha / 2, df)
+
+# Output the result
+cat("Absolute Critical t-value:", absolute_critical_t_value, "\n")
+
+```
+```{r}
+sample_mean <- 24.513
+n<-15
+SEE<-sd(sample_mean)/(sqrt(n))
+SE<-90/sqrt(15)
+SE
+SEE
+```
+
+```{r}
+observed_t<-2.019
+n<-42
+pt(observed_t,df=n-1,lower.tail=FALSE)
+```
+
+
+```{r}
+# Given data
+sample_mean <- 24.513
+sample_size <- 15  # Replace with the actual sample size
+confidence_level <- 0.95
+alpha_over_2 <- (1 - confidence_level) / 2
+degrees_of_freedom <- 14  # Replace ... with the actual degrees of freedom
+
+# Critical t-value
+critical_t <- qt(1 - alpha_over_2, df = degrees_of_freedom)
+
+# Calculate estimated standard error
+estimated_se <- sample_mean / (critical_t / sqrt(sample_size))
+
+# Print the result
+print(estimated_se)
+
+```
+
+```{r}
+# Assuming you already have estimated_se and sample_size
+estimated_sd <- estimated_se * sqrt(sample_size)
+
+# Print the result
+print(estimated_sd)
+
+```
+
+```{r}
+# Assuming you already have abs_observed_t and df
+#p_value = 2 * (1 - pt(abs_observed_t, df))
+n<-15
+p_value<-2*pt(abs(observed_t),df=n-1,
+              lower.tail=FALSE)
+# Print the result
+print(p_value)
+
+```
+
+```{r}
+# Example values
+sample_mean <- 24.513
+population_mean <- 0  # Assuming null hypothesis is that population mean is 0
+sample_sd <- 171.436 # Replace with your actual sample standard deviation
+sample_size <- 15
+
+# Calculate standard error
+standard_error <- sample_sd / sqrt(sample_size)
+
+# Calculate observed t-value
+observed_t <- (sample_mean - population_mean) / standard_error
+
+# Print the result
+print(observed_t)
+
+```
+```{r}
+ dat<-read.table("stroopdata.txt",header=FALSE)
+
+ dat$subj<-rep(1:40,each=40)
+
+ dat<-dat[,c(4,7,8,9)]
+
+ colnames(dat)<-c("compatible","response","rt","subj")
+
+ dat$subj<-factor(dat$subj)
+
+ dat$compatible<-factor(dat$compatible)
+
+ dat<-subset(dat,response!=3)
+
+ dat$correct<-ifelse(dat$response==1,1,0)
+
+ means<-with(dat,tapply(rt,IND=list(subj,compatible),mean))
+
+ head(means)
+```
+
+```{r}
+diff<-means[,2]-means[,1]
+```
+
+
+```{r}
+round(mean(diff),3)
+```
+
+```{r}
+
+print(sd)
+SE<-
+abs_t_valaue<-
+abs_critical_t_value<-
+p_value_two_sided<-
+  
+# Given values
+sample_mean <- 24.513
+observed_t_value <- 4.668
+sample_size <- 15
+
+# Degrees of freedom 
+df <- sample_size - 1
+
+# Critical t-value for a two-sided test at a 0.05 significance level
+critical_t_value <- qt(0.025, df)
+
+# Estimated standard error
+SE <- observed_t_value / sample_mean
+
+# Estimated standard deviation
+SD <- SE * sqrt(sample_size)
+
+# P-value for a two-sided t-test
+p_value <- 2 * pt(-abs(observed_t_value), df)
+p_value
+```
+
+
+```{r}
+SE<-14.254
+sample_mean<- -125.472
+abs_t_valaue<-abs(sample_mean/SE)
+print(abs_t_valaue)
+```
+
+
+```{r}
+abs_t_valaue<-8.802
+n<-40
+p_value<-2*pt(abs_t_valaue, df=n-1,lower.tail = FALSE)
+p_value
+```
+
+
+
+```{r}
+# Example data
+
+
+# Hypothetical mean under the null hypothesis
+null_mean <- 0
+
+# Perform a t-test
+t_test_result <- t.test( rt ~ dat$compqtible, mu = null_mean)
+
+# Extract the observed t-value
+observed_t_value <- t_test_result$statistic
+
+# Output the result
+cat("Observed t-value:", observed_t_value, "\n")
+
+```
+
+
+
+```{r}
+# Calculate the standard deviation of differences
+sd_diff <- sd(diff)
+print(sd_diff)
+# Calculate the square root of the sample size
+sqrt_n <- sqrt(length(diff))
+print(sqrt_n)
+# Calculate the standard error
+standard_error <- sd_diff / sqrt_n
+print(standard_error)
+
+
+```
+```{r}
+# Assuming you have 'dat' and 'means' as defined in the previous R code
+
+# Calculating the observed t-value
+t_result <- t.test(rt ~ compatible, data = dat)
+
+# Extracting the observed t-value
+observed_t_value <- t_result$statistic
+
+# Display the observed t-value
+observed_t_value
+
+```
+```{r}
+# Assuming you have 'observed_t_value' as calculated before
+
+# Calculating the absolute observed t-value
+absolute_observed_t_value <- abs(observed_t_value)
+
+# Display the absolute observed t-value
+absolute_observed_t_value
+
+```
+
+```{r}
+n<-40
+abs_critical_t<-abs(qt(0.025,df=n-1))
+abs_critical_t
+```
+
+```{r}
+2*pt(abs(observed_t),df=n-1,lower.tail=FALSE)
+```
+
+
+```{r}
+df<-41
+aaa<-pt(2.019, df)
+aaa
+
+```
+```{r}
+# Given values
+absolute_observed_t_value <- 4.668
+sample_mean <- 24.513
+sample_size <- 15
+
+# Calculate the estimated standard error
+estimated_standard_error <- absolute_observed_t_value / sample_mean
+
+# Calculate the estimated standard deviation
+estimated_standard_deviation <- estimated_standard_error * sqrt(sample_size)
+
+# Output the results
+cat("Estimated Standard Error:", estimated_standard_error, "\n")
+cat("Estimated Standard Deviation:", estimated_standard_deviation, "\n")
+
+```
+```{r}
+sd(24.513)
+```
+
+```{r}
+observed_t<-8.802
+n<-40
+2*pt((observed_t),df=n-1,lower.tail=FALSE)
+```
+
+
+```{r}
+observed_t<-8.802
+n<-40
+hello<-pt(observed_t,df=n-1,lower.tail = FALSE)
+hello
+```
+
+
+```{r}
+abs_observed_t<-2.022
+n<-40
+pt(abs_observed_t,df=n-1, lower.tail=FALSE)+pt(-abs_observed_t,df=n-1)
+```
+
+```{r}
+n<-15
+sample_mean<-sd(n)
+SE<-sd(sample_mean)/sqrt(n)
+sample_mean
+SE
+```
+
+```{r}
+diff_sim<-rnorm(n=15,mean=24.513,sd=90) 
+stddev<-sd(diff_sim)
+SE<-stddev/sqrt(15)
+diff_sim
+stddev
+SE
+```
+
