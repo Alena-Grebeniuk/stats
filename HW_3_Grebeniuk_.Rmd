@@ -1,0 +1,96 @@
+---
+title: "HW_3_Grebeniuk"
+author: "Grebeniuk_Alena"
+date: "11/16/2023"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+#ex 1. Exercise , First, create the following simulated data and store it in a data frame. The code for creating the simulated data frame dat is as follows:
+
+```{r}
+## create the columns of the data frame:
+subject<-rep(1:30,each=4)
+condition<-rep(letters[1:4],30)
+rt <- abs(rnorm(30*4,mean=500,sd=50))
+## assemble the data frame:
+dat<-data.frame(
+  subject = subject,
+  condition = condition,
+  rt = rt
+)
+## look at the first few rows of the data frame:
+head(dat)
+dim(dat)
+nrow(dat)
+ncol(dat)
+```
+
+#ex 2. Use the subset function to compute the mean reaction time for each of the four conditions
+```{r}
+
+mean_a<-mean(subset(dat, condition=="a", select = rt))
+
+mean_b<-mean(subset(dat,condition=="b",select = rt))
+
+mean_c<-mean(subset(dat,condition=="c", select=rt))
+
+mean_d<-mean(subset(dat,condition=="d",select=rt))
+
+```
+#ex 3. Display the row in the data frame that contains the largest reaction time. Ideally, use the R commands you have learned to print out the relevant row. It is possible to write a single line of R code to print out the relevant row.
+```{r}
+print(subset(dat, rt == max(rt)))
+```
+
+#ex 4. Display the row in the data frame that contains the shortest reaction time. Ideally, use the R commands you have learned to print out the relevant row. It is possible to write a single line of R code to print out the relevant row.
+```{r}
+print(subset(dat,rt==min(rt)))
+```
+
+#ex 5. Convert the condition column to a factor. Check using str() as shown in class that the condition column really is a factor.
+
+```{r}
+dat$condition<-factor(dat$condition)
+str(dat)
+```
+
+#ex 6. Create a new column in the data frame called noise which has the value yes if there is noise and the value no if there is no noise.
+#You can do this using ifelse. For example, if you want to have a column called noise with the value 1 if there is noise and the value 0 if there is no noise, all you have to write is:
+
+```{r}
+dat$noise <- ifelse(dat$condition=="a" | dat$condition=="c",0,1)
+```
+
+#The above code checks if each row in the condition column has the value “a” or “c” and if it does (these arethe no-noise conditions), it writes 0, otherwise it writes 1.A more compact way to write the above is:
+```{r}
+dat$noise <- ifelse(dat$condition%in%c("a","c"),0,1)
+```
+
+#You can figure out what the command %in% does by typing:
+```{r}
+dat$condition%in%c("a","c")
+```
+
+#The command dat$condition%in%c("a","c") checks if each element in the condition column contains an element in the vector c("a","c"). You can check that both commands give you exactly the same result:
+
+```{r}
+(dat$condition=="a" | dat$condition=="c") == dat$condition%in%c("a","c")
+```
+
+#ex 6. Adapt the above ifelse command to create a noise column that has the value yes when noise is present and no when noise is absent.
+
+```{r}
+dat$noise <- ifelse(dat$condition %in% c("a", "c"), "yes", "no")
+head(dat)
+```
+
+#ex 8.Create a new column called line which has the value parallel when the lines are parallel, and nonparallel when the lines are not parallel.
+
+```{r}
+dat$line <- ifelse(dat$condition == "a" | dat$condition == "c", "parallel", "nonparallel")
+head(dat)
+```
+
